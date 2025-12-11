@@ -1,0 +1,1031 @@
+openapi: 3.0.1
+
+info:
+  title: RPM Bot Monitoring API
+  version: 1.0.0
+  description: API for RPM Bot Monitoring System
+
+paths:
+  /addBot:
+    post:
+      tags:
+        - "BotController"
+      summary: "Add a new bot"
+      operationId: "saveBot"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/BotDTO'
+      responses:
+        '200':
+          description: "Bot added successfully"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/AddBotResponse'
+        '400':
+          description: "Invalid input data"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /updateBot:
+    post:
+      tags:
+        - "BotController"
+      summary: "Update an existing bot"
+      operationId: "updateBot"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/BotDTO'
+      responses:
+        '200':
+          description: "Bot updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/UpdateBotResponse'
+        '400':
+          description: "Invalid input data"
+        '404':
+          description: "Bot not found"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /findAllBots:
+    get:
+      tags:
+        - "BotController"
+      summary: "Get all bots"
+      operationId: "getAllBot"
+      responses:
+        '200':
+          description: "List of all bots"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/BotDTO'
+        '500':
+          description: "Internal server error"
+
+  /findAllBots/{id}:
+    get:
+      tags:
+        - "BotController"
+      summary: "Get bot by name"
+      operationId: "getBot"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: int
+          description: "Bot name"
+      responses:
+        '200':
+          description: "Bot found"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/BotDTO'
+        '404':
+          description: "Bot not found"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /deleteBot/{id}:
+    delete:
+      tags:
+        - "BotController"
+      summary: "Delete a bot"
+      operationId: "deleteBot"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: int
+          description: "Bot name"
+      responses:
+        '200':
+          description: "Bot deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: "Bot not found"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /getBotStatus/{name}/{status}/{processName}/{lastrunTimeStamp}:
+    get:
+      tags:
+        - "BotController"
+      summary: "Update bot status"
+      operationId: "getBotStatus"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: processName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: lastrunTimeStamp
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Bot status updated successfully"
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /addApplicationUser:
+    post:
+      tags:
+        - "UserController"
+      summary: "Add a new application user"
+      operationId: "adduser"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/UserDTO'
+      responses:
+        '200':
+          description: "User added successfully"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/UserResponse'
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /findAllApplicationUsers:
+    get:
+      tags:
+        - "UserController"
+      summary: "Get all application users"
+      operationId: "getAllUser"
+      responses:
+        '200':
+          description: "List of all users"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/UserDTO'
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /updateApplicationUser:
+    post:
+      tags:
+        - "UserController"
+      summary: "Update an existing user"
+      operationId: "updateUser"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/UserDTO'
+      responses:
+        '200':
+          description: "User updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/UserResponse'
+        '400':
+          description: "Invalid input data"
+        '404':
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /addProcess:
+    post:
+      tags:
+        - "ProcessController"
+      summary: "Add a new process"
+      operationId: "saveNewProcess"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/ProcessDTO'
+      responses:
+        '200':
+          description: "Process added successfully"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/AddProcessResponse'
+        '400':
+          description: "Invalid input data"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /updateProcess:
+    post:
+      tags:
+        - "ProcessController"
+      summary: "Update an existing process"
+      operationId: "updateProcess"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/ProcessDTO'
+      responses:
+        '200':
+          description: "Process updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/AddProcessResponse'
+        '400':
+          description: "Invalid input data"
+        '404':
+          description: "Process not found"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /findAllProcess:
+    get:
+      tags:
+        - "ProcessController"
+      summary: "Get all processes"
+      operationId: "getAllProcess"
+      responses:
+        '200':
+          description: "List of all processes"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/ProcessDTO'
+        '500':
+          description: "Internal server error"
+
+  /findAllProcess/{id}:
+    get:
+      tags:
+        - "ProcessController"
+      summary: "Get process by name"
+      operationId: "getNewProcess"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: int
+          description: "Process name"
+      responses:
+        '200':
+          description: "Process found"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/ProcessDTO'
+        '404':
+          description: "Process not found"
+        '500':
+          description: "Internal server error"
+
+  /deleteProcess/{id}:
+    delete:
+      tags:
+        - "ProcessController"
+      summary: "Delete a process"
+      operationId: "deleteProcess"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: int
+          description: "Process name"
+      responses:
+        '200':
+          description: "Process deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: "Process not found"
+        '500':
+          description: "Internal server error"
+
+  /listProcess/{id}:
+    get:
+      tags:
+        - "ProcessController"
+      summary: "Get processes by bot name"
+      operationId: "getProcesses"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: int
+          description: "Bot name"
+      responses:
+        '200':
+          description: "List of processes for the bot"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/ProcessDTO'
+        '500':
+          description: "Internal server error"
+
+  /getProcessDetails/{id}:
+    get:
+      tags:
+        - "ProcessController"
+      summary: "Get process details by name"
+      operationId: "getProcessDetails"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: int
+          description: "Process name"
+      responses:
+        '200':
+          description: "Process details"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/ProcessDTO'
+        '500':
+          description: "Internal server error"
+
+  /getProcessForRegisteredBots:
+    post:
+      tags:
+        - "ProcessController"
+      summary: "Get processes for registered bots"
+      operationId: "getProcessForRegisteredBots"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/BotRequest'
+      responses:
+        '200':
+          description: "List of process names"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /userLogin:
+    post:
+      tags:
+        - "LoginController"
+      summary: "User login"
+      operationId: "login"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/LoginDTO'
+      responses:
+        '200':
+          description: "Login successful"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/LoginResponse'
+        '400':
+          description: "Invalid credentials"
+        '500':
+          description: "Internal server error"
+
+  /uploadLogFileNew:
+    post:
+      tags:
+        - "LogController"
+      summary: "Upload log file"
+      operationId: "processLogFile"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: "Log file processed successfully"
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: "Invalid file"
+        '500':
+          description: "Internal server error"
+
+  /uploadPythonLogFile:
+    post:
+      tags:
+        - "LogController"
+      summary: "Upload Python log file"
+      operationId: "processPythonLogFile"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: "Python log file processed successfully"
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: "Invalid file"
+        '500':
+          description: "Internal server error"
+
+  /requestAllBotDetailUtilisation:
+    post:
+      tags:
+        - "LogController"
+      summary: "Get all bot detail utilisation"
+      operationId: "requestAllBotDetailUtilisation"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/RequestAllBotUtilisation'
+      responses:
+        '200':
+          description: "Bot detail utilisation data"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/AllBotDetailUtilisationResponse'
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /requestAllBotUtilisation:
+    post:
+      tags:
+        - "LogController"
+      summary: "Get all bot utilisation"
+      operationId: "requestAllBotUtilisationNew"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/RequestAllBotUtilisation'
+      responses:
+        '200':
+          description: "Bot utilisation data"
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /requestBotUtilisationNew:
+    post:
+      tags:
+        - "LogController"
+      summary: "Get bot utilisation"
+      operationId: "requestBotUtilisationNew"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/RequestBotUtilisation'
+      responses:
+        '200':
+          description: "Bot utilisation data"
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /filterLogsNew:
+    post:
+      tags:
+        - "LogController"
+      summary: "Filter logs (new)"
+      operationId: "filterLogsNew"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/RequestUtilisationNew'
+      responses:
+        '200':
+          description: "Filtered logs"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/ExecutionTimeDTO'
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /filterLogs:
+    post:
+      tags:
+        - "LogController"
+      summary: "Filter logs"
+      operationId: "filterLogs"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/RequestUtilsation'
+      responses:
+        '200':
+          description: "Filtered logs"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/ExecutionTimeDTO'
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /getUniqueBotNames:
+    get:
+      tags:
+        - "LogController"
+      summary: "Get unique bot names"
+      operationId: "getBotNames"
+      responses:
+        '200':
+          description: "List of unique bot names"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: "Internal server error"
+
+  /getDetailsLogByDateRange/{botName}/{startDate}/{endDate}:
+    get:
+      tags:
+        - "LogController"
+      summary: "Get unique bot names"
+      operationId: "getDetailsLogByDateRange"
+      parameters:
+        - name: botName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: endDate
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Logs"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/ExecutionTimeDTO'
+        '500':
+          description: "Internal server error"
+
+  /getPythonProcessUtilisation:
+    post:
+      tags:
+        - "LogController"
+      summary: "Get Python process utilisation"
+      operationId: "getPythonUtilisation"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'common.yml#/components/schemas/RequestPythonUtilisation'
+      responses:
+        '200':
+          description: "Python process utilisation data"
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /sendLogFile:
+    post:
+      tags:
+        - "LogController"
+      summary: "Send log file"
+      operationId: "uploadLogFile"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: "Log file processed successfully"
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: "Invalid input"
+        '500':
+          description: "Internal server error"
+
+  /uploadFile:
+    put:
+      tags:
+        - "ChecksumController"
+      summary: "Upload or update a file"
+      operationId: "uploadFile"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - processName
+                - processVersion
+                - botName
+              properties:
+                file:
+                  type: string
+                  format: binary
+                processName:
+                  type: string
+                processVersion:
+                  type: string
+                botName:
+                  type: string
+      responses:
+        '200':
+          description: "File uploaded successfully"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/UploadFileResponse'
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /uploadXamlFiles/{processName}/{processVersion}/{botName}:
+    put:
+      tags:
+        - "ChecksumController"
+      summary: "Upload multiple XAML files"
+      operationId: "uploadMultipleFiles"
+      parameters:
+        - name: processName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: processVersion
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: botName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: files
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              format: binary
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: "Files uploaded successfully"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'common.yml#/components/schemas/UploadFileResponse'
+        '400':
+          description: "Invalid input data"
+        '500':
+          description: "Internal server error"
+
+  /validateChecksum/{machineName}/{processName}/{processVersion}/{checksumId}/{fileName}:
+    get:
+      tags:
+        - "ChecksumController"
+      summary: "Validate checksum"
+      operationId: "validateChecksum"
+      parameters:
+        - name: machineName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: processName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: processVersion
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: checksumId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fileName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Checksum validation result"
+          content:
+            application/json:
+              schema:
+                type: string
+                enum: ["Matched", "Un-matched"]
+        '400':
+          description: "Invalid parameters"
+        '500':
+          description: "Internal server error"
+
+  /getAllChecksumData:
+    get:
+      tags:
+        - "ChecksumController"
+      summary: "Get all checksum data"
+      operationId: "getAllChecksumData"
+      responses:
+        '200':
+          description: "List of all checksum data"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '500':
+          description: "Internal server error"
+
+  /api/session/validate:
+    get:
+      tags:
+        - "SessionController"
+      summary: "Validate current session and return user authentication status"
+      description: "Frontend can call this endpoint to check if user is logged in and get session information"
+      operationId: "validateSession"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          description: "Bearer token for authentication"
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: "Session is valid and active"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/SessionValidationResponse'
+              example:
+                authenticated: true
+                username: "user@example.com"
+                role: "ADMIN"
+                remainingSessionTime: 25
+                sessionTimeoutMinutes: 30
+        '401':
+          description: "Session expired or not authenticated"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/SessionValidationResponse'
+              example:
+                authenticated: false
+                message: "Session expired due to inactivity"
+                expired: true
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+  /api/session/check-admin:
+    get:
+      tags:
+        - "SessionController"
+      summary: "Check if user has admin role"
+      description: "Validates session and checks if the authenticated user has ADMIN role"
+      operationId: "checkAdminRole"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          description: "Bearer token for authentication"
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: "Admin role check successful"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/AdminCheckResponse'
+              example:
+                isAdmin: true
+                authenticated: true
+                role: "ADMIN"
+        '401':
+          description: "Session expired or not authenticated"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/AdminCheckResponse'
+              example:
+                isAdmin: false
+                authenticated: false
+                message: "No active session found"
+        '500':
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yml#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "JWT token authentication. Include the token in the Authorization header as 'Bearer <token>'"
+
