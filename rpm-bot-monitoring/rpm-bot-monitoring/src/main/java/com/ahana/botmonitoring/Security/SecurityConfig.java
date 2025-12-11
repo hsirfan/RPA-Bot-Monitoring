@@ -79,6 +79,7 @@ public class SecurityConfig {
                                                                 "/getProcessForRegisteredBots",
                                                                 "/getUniqueBotNames",
                                                                 "/deleteProcess/**",
+                                                                "/listProcess/**",
                                                                 // User management endpoints - now public
                                                                 "/addApplicationUser",
                                                                 "/findAllApplicationUsers",
