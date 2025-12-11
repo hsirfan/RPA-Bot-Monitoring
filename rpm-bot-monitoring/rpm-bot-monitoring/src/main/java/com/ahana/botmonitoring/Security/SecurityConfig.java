@@ -73,6 +73,7 @@ public class SecurityConfig {
                                                                 "/getDetailsLogByDateRange/**",
                                                                 // Process endpoints - now public
                                                                 "/addProcess",
+                                                                "//uploadXamlFiles/**",
                                                                 "/findAllProcess",
                                                                 "/updateProcess",
                                                                 "/getProcessForRegisteredBots",
