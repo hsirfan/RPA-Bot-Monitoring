@@ -820,51 +820,54 @@ paths:
         '500':
           description: "Internal server error"
 
-  /uploadXamlFiles/{processName}/{processVersion}/{botName}:
-    put:
-      tags:
-        - "ChecksumController"
-      summary: "Upload multiple XAML files"
-      operationId: "uploadMultipleFiles"
-      parameters:
-        - name: processName
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: processVersion
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: botName
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: files
-          in: query
-          required: true
-          schema:
-            type: array
-            items:
-              type: string
-              format: binary
-          style: form
-          explode: true
-      responses:
-        '200':
-          description: "Files uploaded successfully"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: 'common.yml#/components/schemas/UploadFileResponse'
-        '400':
-          description: "Invalid input data"
-        '500':
-          description: "Internal server error"
+#  /uploadXamlFiles/{processName}/{processVersion}/{botName}:
+#    put:
+#      tags:
+#        - "ChecksumController"
+#      summary: "Upload multiple XAML files"
+#      operationId: "uploadMultipleFiles"
+#      parameters:
+#        - name: processName
+#          in: path
+#          required: true
+#          schema:
+#            type: string
+#        - name: processVersion
+#          in: path
+#          required: true
+#          schema:
+#            type: string
+#        - name: botName
+#          in: path
+#          required: true
+#          schema:
+#            type: string
+#      requestBody:
+#        required: true
+#        content:
+#          multipart/form-data:
+#            schema:
+#              type: object
+#              required:
+#                - files
+#              properties:
+#                files:
+#                  type: string
+#                  format: binary
+#                  description: "Upload multiple files by using the same parameter name 'files' multiple times"
+#      responses:
+#        '200':
+#          description: "Files uploaded successfully"
+#          content:
+#            application/json:
+#              schema:
+#                type: array
+#                items:
+#                  $ref: 'common.yml#/components/schemas/UploadFileResponse'
+#        '400':
+#          description: "Invalid input data"
+#        '500':
+#          description: "Internal server error"
 
   /validateChecksum/{machineName}/{processName}/{processVersion}/{checksumId}/{fileName}:
     get:

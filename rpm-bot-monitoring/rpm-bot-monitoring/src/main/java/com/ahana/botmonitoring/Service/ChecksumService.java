@@ -116,7 +116,7 @@ public class ChecksumService {
         public List<UploadFileResponse> uploadMultipleFiles(MultipartFile[] files, String processName,
                         String processVersion, String botName) {
                 return Arrays.stream(files)
-                                .map(file -> uploadSingleFile(file, processName, processVersion, botName))
+                                .map(file -> saveSingleFile(file, processName, processVersion, botName))
                                 .collect(Collectors.toList());
         }
 
@@ -187,5 +187,52 @@ public class ChecksumService {
 
         private boolean isEmpty(String value) {
                 return value == null || value.trim().isEmpty();
+        }
+
+
+        private UploadFileResponse saveSingleFile(MultipartFile file,
+                                                  String processName,
+                                                  String processVersion,
+                                                  String botName) {
+
+                try {
+                        // Store file physically
+                        String filePath = fileStorageService.storeFile(file, botName, processName, processVersion);
+                        String fileName = Path.of(filePath).getFileName().toString();
+
+                        // Generate checksum
+                        String checksum = generateChecksum(file);
+
+                        com.ahana.botmonitoring.generated.model.BotDTO bot = botService.getBotByName(botName)
+                                .orElseThrow(() -> new RuntimeException("Bot not found: " + botName));
+                        String machineName = bot.getMachineName();
+
+                        // Get machine name
+                        // BotModel bot = botRepository.findById(botName)
+                        //      .orElseThrow(() -> new RuntimeException("Bot not found: " + botName));
+
+                        // Create new record ALWAYS
+                        Checksum model = new Checksum();
+                        model.setBotName(botName);
+                        model.setMachineName(bot.getMachineName());
+                        model.setProcessName(processName);
+                        model.setProcessVersion(processVersion);
+                        model.setChecksum(checksum);
+                        model.setFileuri(filePath);
+                        model.setUploadedAt(LocalDateTime.now());
+
+                        checksumRepository.save(model);
+
+                        // Download URL
+                        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                                .path("/downloadFile/")
+                                .path(fileName)
+                                .toUriString();
+
+                        return new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+
+                } catch (Exception e) {
+                        throw new RuntimeException("Error while saving file", e);
+                }
         }
 }

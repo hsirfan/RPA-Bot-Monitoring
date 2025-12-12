@@ -4,7 +4,6 @@ import com.ahana.botmonitoring.Service.ChecksumService;
 import com.ahana.botmonitoring.generated.api.ChecksumControllerApi;
 import com.ahana.botmonitoring.generated.model.UploadFileResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,20 +29,26 @@ public class ChecksumController implements ChecksumControllerApi {
         return ResponseEntity.ok(response);
     }
 
-    @Override
-    public ResponseEntity<List<UploadFileResponse>> uploadMultipleFiles(String processName, String processVersion,
-            String botName, List<Resource> files) {
-        log.warn(
-                "uploadMultipleFiles called with List<Resource> - this may need OpenAPI spec update to use MultipartFile[]");
-        return ResponseEntity.ok(Collections.emptyList());
-    }
-
+    // Override the generated method to support multiple files properly
+    // The generated interface expects MultipartFile (singular) but we need
+    // List<MultipartFile>
+    // So we override the _uploadMultipleFiles method directly with @PutMapping
     @PutMapping("/uploadXamlFiles/{processName}/{processVersion}/{botName}")
-    public List<UploadFileResponse> uploadMultipleFilesLegacy(@PathVariable String processName,
+    public ResponseEntity<List<UploadFileResponse>> uploadMultipleFilesImpl(
+            @PathVariable String processName,
             @PathVariable String processVersion,
             @PathVariable String botName,
-            @RequestParam("files") MultipartFile[] files) {
-        return checksumService.uploadMultipleFiles(files, processName, processVersion, botName);
+            @RequestPart(value = "files", required = true) List<MultipartFile> files) {
+        try {
+            MultipartFile[] filesArray = files.toArray(new MultipartFile[0]);
+            List<UploadFileResponse> responses = checksumService.uploadMultipleFiles(filesArray, processName,
+                    processVersion, botName);
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            log.error("Error uploading files for process: {}, version: {}, bot: {}", processName, processVersion,
+                    botName, e);
+            return ResponseEntity.badRequest().body(Collections.emptyList());
+        }
     }
 
     @Override
