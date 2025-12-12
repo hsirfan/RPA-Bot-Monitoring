@@ -396,3 +396,39 @@ components:
         message:
           type: string
 
+    StatusUpdateResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the entity (bot/machine)
+          example: "bot1"
+        status:
+          type: string
+          description: Updated status
+          enum: [ ACTIVE, INACTIVE, RUNNING, STOPPED, ERROR, COMPLETED ]
+          example: "ACTIVE"
+        processName:
+          type: string
+          description: Last run or current running process name
+          example: "InvoiceProcessing"
+        message:
+          type: string
+          description: Success or error message
+          example: "Successfully updated bot1 status as ACTIVE, last run/current running process InvoiceProcessing updated with status ACTIVE"
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+          example: true
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the update (ISO 8601 format)
+          example: "2025-12-12T10:30:00.000Z"
+      required:
+        - name
+        - status
+        - processName
+        - message
+        - success
+        - timestamp

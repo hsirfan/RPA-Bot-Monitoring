@@ -5,10 +5,7 @@ import com.ahana.botmonitoring.Entity.BotModel;
 import com.ahana.botmonitoring.Entity.ProcessModel;
 import com.ahana.botmonitoring.Mapper.BotMapper;
 import com.ahana.botmonitoring.Repository.BotRepository;
-import com.ahana.botmonitoring.generated.model.AddBotResponse;
-import com.ahana.botmonitoring.generated.model.AddProcessResponse;
-import com.ahana.botmonitoring.generated.model.BotDTO;
-import com.ahana.botmonitoring.generated.model.UpdateBotResponse;
+import com.ahana.botmonitoring.generated.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -16,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +31,8 @@ public class BotService {
         this.botMapper = botMapper;
         this.mongoTemplateRef = mongoTemplateRef;
     }
+    public static final String UPDATE_STATUS_MESSAGE =
+            "Successfully updated %s status as %s, last run/current running process %s updated with status %s";
 
     public AddBotResponse saveBot(BotDTO botDTO) {
         BotModel bot = botMapper.toEntity(botDTO);
@@ -107,7 +107,7 @@ public class BotService {
         return bots != null && !bots.isEmpty() ? Optional.of(botMapper.toDTO(bots.get(0))) : Optional.empty();
     }
 
-    public String updateBotStatus(String name, String status, String processName, String lastrunTimeStamp) {
+    public StatusUpdateResponse updateBotStatus(String name, String status, String processName, String lastrunTimeStamp) {
 
         Query botQuery = new Query();
         botQuery.addCriteria(Criteria.where("ip").is(name));
@@ -135,10 +135,18 @@ public class BotService {
 
         mongoTemplateRef.findAndModify(processQuery, processUpdate, ProcessModel.class);
 
-        return "Successfully updated " + name +
-                " status as " + status +
-                ", last run/current running process " + processName +
-                " updated with status " + status;
+        StatusUpdateResponse response = new StatusUpdateResponse();
+        response.setName(name);
+        response.setStatus(StatusUpdateResponse.StatusEnum.valueOf(status));
+        response.setProcessName(processName);
+        response.setSuccess(true);
+        response.setTimestamp(LocalDateTime.now());
+        response.setMessage(
+                String.format(UPDATE_STATUS_MESSAGE, name, status, processName, status
+                )
+        );
+
+       return response;
     }
 
 }
